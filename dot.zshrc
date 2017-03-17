@@ -1,20 +1,14 @@
-# If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
-
 # Path to your oh-my-zsh installation.
-  export ZSH=/home/sleung/.oh-my-zsh
+export ZSH=$HOME/.oh-my-zsh
 
-# Set name of the theme to load. Optionally, if you set this to "random"
-# it'll load a random theme each time that oh-my-zsh is loaded.
-# See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-ZSH_THEME="robbyrussell"
+# Set name of the theme to load.
+# Look in ~/.oh-my-zsh/themes/
+# Optionally, if you set this to "random", it'll load a random theme each
+# time that oh-my-zsh is loaded.
+ZSH_THEME="amuse"
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
-
-# Uncomment the following line to use hyphen-insensitive completion. Case
-# sensitive completion must be off. _ and - will be interchangeable.
-# HYPHEN_INSENSITIVE="true"
 
 # Uncomment the following line to disable bi-weekly auto-update checks.
 # DISABLE_AUTO_UPDATE="true"
@@ -51,12 +45,13 @@ ZSH_THEME="robbyrussell"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git)
+plugins=(git docker python)
 
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
 
+export PATH="$HOME/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # You may need to manually set your language environment
@@ -68,12 +63,14 @@ source $ZSH/oh-my-zsh.sh
 # else
 #   export EDITOR='mvim'
 # fi
+#
+export EDITOR=nano
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
 # ssh
-# export SSH_KEY_PATH="~/.ssh/rsa_id"
+# export SSH_KEY_PATH="~/.ssh/dsa_id"
 
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
@@ -83,10 +80,86 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-export GOPATH=$HOME/go
-export PATH=$HOME/.linuxbrew/bin:$PATH:$GOPATH/bin
-export EDITOR=nano
-alias gr='gvim --remote'
 alias lt='ls -lt | head'
+alias gr='gvim --remote'
+alias cr='code -r'
+#alias subl='/opt/sublime_text_3/sublime_text'
+alias rf='rox-filer'
+alias D="cd $HOME/Downloads"
+alias W="cd $HOME/Nut/wiki"
+alias w="cd $HOME/wise2c"
+alias hf="cd $HOME/wise2c/hfbank"
+alias V="[ -d ./venv ] && . ./venv/bin/activate"
+alias Z=". $HOME/.zshrc"
+alias mg='mongoose'
+# alias gs='git status'
 alias ts='tig status'
-[ -f /usr/share/autojump/autojump.sh ] && . /usr/share/autojump/autojump.sh
+# alias gl='git log'
+# alias gk='gitk'
+# git alias are redundant due to https://github.com/robbyrussell/oh-my-zsh/wiki/Cheatsheet
+alias h='history'
+alias vi='nvim'
+alias kc='kubectl'
+alias cnpm="npm --registry=https://registry.npm.taobao.org \
+	--cache=$HOME/.npm/.cache/cnpm \
+	--disturl=https://npm.taobao.org/dist \
+	--userconfig=$HOME/.cnpmrc"
+
+function path {
+    echo $PATH | sed -e 's,:,\
+,g'
+}
+
+function mshare
+{
+    sudo mount -t cifs //nas/share2 -o username=$1,password=$2,uid=1000,gid=100,rw /mnt/share/
+}
+
+function mpers
+{
+    sudo mount -t cifs //nas/personal -o username=$1,password=$2,uid=1000,gid=100,rw /mnt/personal
+}
+
+function nasmount
+{
+    if [ ! -d $HOME/nas ]; then
+	echo "Missing $$HOME/nas"
+	exit
+    fi
+    cd
+    sshfs wliang@192.168.1.2:/mnt nas
+}
+
+function andsync
+{
+    rsync -rlvc --delete -e 'ssh -p 2222' $HOME/sync/ admin@192.168.1.6://mnt/sdcard/Download/osxsync
+}
+
+function wisegit
+{
+    git config --local user.name "Wenzhi Liang"
+    git config --local user.email "liangwz@wise2c.com"
+}
+
+
+export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin
+export QINGCLOUD_KEY=$HOME/.ssh/qingcloud/qing-cloud-zoom1-key
+
+# . /etc/zsh_command_not_found
+
+ulimit -c unlimited
+
+### gopath
+export GOPATH=$HOME/go
+
+. /usr/local/etc/autojump.sh
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f /Users/wliang/Downloads/google-cloud-sdk/path.zsh.inc ]; then
+  source '/Users/wliang/Downloads/google-cloud-sdk/path.zsh.inc'
+fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f /Users/wliang/Downloads/google-cloud-sdk/completion.zsh.inc ]; then
+  source '/Users/wliang/Downloads/google-cloud-sdk/completion.zsh.inc'
+fi

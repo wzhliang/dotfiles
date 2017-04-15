@@ -105,6 +105,25 @@ alias cnpm="npm --registry=https://registry.npm.taobao.org \
 	--disturl=https://npm.taobao.org/dist \
 	--userconfig=$HOME/.cnpmrc"
 
+function fan 
+{
+	export http_proxy=http://localhost:8123
+	export https_proxy=http://localhost:8123
+	export HTTP_PROXY=http://localhost:8123
+	export __FAN_PROMPT=$PS1
+	export PS1="${PS1}_> "
+	git config --global http.proxy localhost:8123
+}
+function unfan 
+{
+	unset http_proxy
+	unset https_proxy
+	unset HTTP_PROXY
+	export PS1=$__FAN_PROMPT
+	unset __FAN_PROMPT
+	git config --global --unset http.proxy
+}
+
 function path {
     echo $PATH | sed -e 's,:,\
 ,g'

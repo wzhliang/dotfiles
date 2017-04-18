@@ -78,8 +78,6 @@ export EDITOR=nano
 # For a full list of active aliases, run `alias`.
 #
 # Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
 alias lt='ls -lt | head'
 alias gr='gvim --remote'
 alias cr='code -r'
@@ -92,11 +90,7 @@ alias hf="cd $HOME/wise2c/hfbank"
 alias V="[ -d ./venv ] && . ./venv/bin/activate"
 alias Z=". $HOME/.zshrc"
 alias mg='mongoose'
-# alias gs='git status'
 alias ts='tig status'
-# alias gl='git log'
-# alias gk='gitk'
-# git alias are redundant due to https://github.com/robbyrussell/oh-my-zsh/wiki/Cheatsheet
 alias h='history'
 alias vi='nvim'
 alias kc='kubectl'

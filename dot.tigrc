@@ -1,1 +1,2 @@
 bind status - ?git checkout %(file)
+bind status ^ ?rm %(file)

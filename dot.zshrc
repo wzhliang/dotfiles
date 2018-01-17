@@ -45,7 +45,7 @@ ZSH_THEME="amuse"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git docker python)
+plugins=(git docker python kubectl vagrant)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -80,42 +80,58 @@ export EDITOR=nano
 # Example aliases
 alias lt='ls -lt | head'
 alias gr='gvim --remote'
+alias vr='vimr $(fzf)'
+alias goto='cd $(dirname `fzf`)'
 alias cr='code -r'
-#alias subl='/opt/sublime_text_3/sublime_text'
 alias rf='rox-filer'
 alias D="cd $HOME/Downloads"
-alias W="cd $HOME/Nut/wiki"
+alias W="cd $HOME/Dropbox/wiki"
 alias w="cd $HOME/wise2c"
 alias hf="cd $HOME/wise2c/hfbank"
 alias V="[ -d ./venv ] && . ./venv/bin/activate"
 alias Z=". $HOME/.zshrc"
-alias mg='mongoose'
 alias ts='tig status'
 alias h='history'
 alias vi='nvim'
 alias kc='kubectl'
+alias kv='kubectl --kubeconfig ~/.kube/vmware.conf'
+alias kgp='kubectl get pod'
+alias kgs='kubectl get svc'
+alias kgd='kubectl get deploy'
+alias kgn='kubectl get node'
+alias kdp='kubectl describe pod'
+alias kds='kubectl describe svc'
+alias kd='kubectl describe'
+alias kcf='kubectl create -f '
+alias kdf='kubectl delete -f '
+alias kp='kubectl plugin '
+alias wr='open http://dev-4:`kubectl get svc  ui -o go-template="{{ (index .spec.ports 0).nodePort}}"`'
 alias cnpm="npm --registry=https://registry.npm.taobao.org \
 	--cache=$HOME/.npm/.cache/cnpm \
 	--disturl=https://npm.taobao.org/dist \
 	--userconfig=$HOME/.cnpmrc"
+alias sen='docker run -v /var/run/docker.sock:/run/docker.sock -ti -e TERM tomastomecek/sen'
 
-function fan 
+function fan
 {
-	export http_proxy=http://localhost:8123
-	export https_proxy=http://localhost:8123
-	export HTTP_PROXY=http://localhost:8123
+	export http_proxy=http://localhost:2080
+	export https_proxy=http://localhost:2080
+	export HTTP_PROXY=http://localhost:2080
 	export __FAN_PROMPT=$PS1
 	export PS1="${PS1}_> "
-	git config --global http.proxy localhost:8123
+	# git config --global http.proxy localhost:2080
 }
 function unfan 
 {
+	if [ -z $__FAN_PROMPT ]; then
+		return
+	fi
 	unset http_proxy
 	unset https_proxy
 	unset HTTP_PROXY
 	export PS1=$__FAN_PROMPT
 	unset __FAN_PROMPT
-	git config --global --unset http.proxy
+	# git config --global --unset http.proxy
 }
 
 function path {
@@ -157,6 +173,10 @@ function wisegit
 
 export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin
 export QINGCLOUD_KEY=$HOME/.ssh/qingcloud/qing-cloud-zoom1-key
+export QNAK=$(cat $HOME/.ssh/qiniu/ak.txt)
+export QNSK=$(cat $HOME/.ssh/qiniu/sk.txt)
+export QNDOMAIN="p2ldtd97l.bkt.clouddn.com"
+export XING_TRACE_ON=1
 
 # . /etc/zsh_command_not_found
 
@@ -164,6 +184,8 @@ ulimit -c unlimited
 
 ### gopath
 export GOPATH=$HOME/go
+# using official Go distribution intead of brew installation
+export GOROOT=/usr/local/go
 
 . /usr/local/etc/autojump.sh
 
@@ -176,3 +198,9 @@ fi
 if [ -f /Users/wliang/Downloads/google-cloud-sdk/completion.zsh.inc ]; then
   source '/Users/wliang/Downloads/google-cloud-sdk/completion.zsh.inc'
 fi
+eval $(thefuck --alias)
+export NC='wisecloud-controller'
+export NA='wisecloud-agent'
+
+# auto completion for stern
+source <(stern --completion=zsh)

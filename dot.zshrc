@@ -81,6 +81,7 @@ export EDITOR=nano
 alias lt='ls -lt | head'
 alias gr='gvim --remote'
 alias vr='vimr $(fzf)'
+alias or='open $(fzf)'
 alias goto='cd $(dirname `fzf`)'
 alias cr='code -r'
 alias rf='rox-filer'
@@ -94,23 +95,23 @@ alias ts='tig status'
 alias h='history'
 alias vi='nvim'
 alias kc='kubectl'
-alias kv='kubectl --kubeconfig ~/.kube/vmware.conf'
+alias kcc='kubectl create'
+alias kcd='kubectl delete'
+alias kcds='kubectl describe'
+alias kca='kubectl apply'
+alias kcg='kubectl get'
 alias kgp='kubectl get pod'
 alias kgs='kubectl get svc'
 alias kgd='kubectl get deploy'
-alias kgn='kubectl get node'
-alias kdp='kubectl describe pod'
-alias kds='kubectl describe svc'
-alias kd='kubectl describe'
-alias kcf='kubectl create -f '
-alias kdf='kubectl delete -f '
-alias kp='kubectl plugin '
-alias wr='open http://dev-4:`kubectl get svc  ui -o go-template="{{ (index .spec.ports 0).nodePort}}"`'
 alias cnpm="npm --registry=https://registry.npm.taobao.org \
 	--cache=$HOME/.npm/.cache/cnpm \
 	--disturl=https://npm.taobao.org/dist \
 	--userconfig=$HOME/.cnpmrc"
 alias sen='docker run -v /var/run/docker.sock:/run/docker.sock -ti -e TERM tomastomecek/sen'
+alias cat=bat
+function ipa {
+	ifconfig  en0 | grep 'inet ' | awk '{print $2}'
+}
 
 function fan
 {
@@ -121,7 +122,7 @@ function fan
 	export PS1="${PS1}_> "
 	# git config --global http.proxy localhost:2080
 }
-function unfan 
+function unfan
 {
 	if [ -z $__FAN_PROMPT ]; then
 		return
@@ -170,12 +171,24 @@ function wisegit
     git config --local user.email "liangwz@wise2c.com"
 }
 
+function ktx
+{
+    pushd .
+    cd $HOME/.kube
+    git checkout $(git branch | fzf)
+    popd
+}
+
+function J
+{
+    jira browse CLOUD-$1
+}
 
 export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin
 export QINGCLOUD_KEY=$HOME/.ssh/qingcloud/qing-cloud-zoom1-key
 export QNAK=$(cat $HOME/.ssh/qiniu/ak.txt)
 export QNSK=$(cat $HOME/.ssh/qiniu/sk.txt)
-export QNDOMAIN="p2ldtd97l.bkt.clouddn.com"
+export QNDOMAIN="oyzp17qa8.bkt.clouddn.com"
 export XING_TRACE_ON=1
 
 # . /etc/zsh_command_not_found
@@ -185,7 +198,7 @@ ulimit -c unlimited
 ### gopath
 export GOPATH=$HOME/go
 # using official Go distribution intead of brew installation
-export GOROOT=/usr/local/go
+# export GOROOT=/usr/local/go
 
 . /usr/local/etc/autojump.sh
 
@@ -202,5 +215,11 @@ eval $(thefuck --alias)
 export NC='wisecloud-controller'
 export NA='wisecloud-agent'
 
-# auto completion for stern
-source <(stern --completion=zsh)
+# kubernetes prompt
+source $HOME/github/kube-ps1/kube-ps1.sh
+PROMPT='$(kube_ps1)'$PROMPT
+export NVIM_LISTEN_ADDRESS=/tmp/nvim
+
+eval "$(jira --completion-script-zsh)"
+
+source /Users/wliang/.gvm/scripts/gvm

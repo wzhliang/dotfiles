@@ -6,6 +6,7 @@ export ZSH=$HOME/.oh-my-zsh
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
 ZSH_THEME="amuse"
+#ZSH_THEME="steeef"
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -45,7 +46,7 @@ ZSH_THEME="amuse"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git docker python kubectl vagrant)
+plugins=(git docker python kubectl osx zsh-autosuggestions kube-ps1)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -115,13 +116,15 @@ function ipa {
 
 function fan
 {
-	export http_proxy=http://localhost:2080
-	export https_proxy=http://localhost:2080
-	export HTTP_PROXY=http://localhost:2080
+	export http_proxy=http://localhost:7890
+	export https_proxy=http://localhost:7890
+	export HTTP_PROXY=http://localhost:7890
+	export all_proxy=socks5://127.0.0.1:7891
 	export __FAN_PROMPT=$PS1
 	export PS1="${PS1}_> "
 	# git config --global http.proxy localhost:2080
 }
+
 function unfan
 {
 	if [ -z $__FAN_PROMPT ]; then
@@ -130,6 +133,7 @@ function unfan
 	unset http_proxy
 	unset https_proxy
 	unset HTTP_PROXY
+	unset all_proxy
 	export PS1=$__FAN_PROMPT
 	unset __FAN_PROMPT
 	# git config --global --unset http.proxy
@@ -179,12 +183,41 @@ function ktx
     popd
 }
 
-function J
+function update_ctx
 {
-    jira browse CLOUD-$1
+	cd ~/wseyun/wise2c-kubectl
+	git pull && rm -rf ~/.kube/configs/* && cp conf/* ~/.kube/configs/
 }
 
-export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin
+function K
+{
+	ctx=$(ls ~/.kube/configs | fzf)
+	export KUBECONFIG=$HOME/.kube/configs/$ctx
+}
+
+function J
+{
+    open https://jira.wise2c.com/browse/CLOUD-$1
+    # jira browse CLOUD-$1
+}
+
+function backup-ymy
+{
+    rsync -av --delete $HOME/ymy /Volumes/Extreme\ SSD/Backup
+}
+
+function backup-wise2c
+{
+    rsync -av --delete $HOME/wise2c /Volumes/Extreme\ SSD/Backup
+}
+
+function jtd
+{
+	jira list -q "resolution = Unresolved AND assignee = $1 AND project = 10206"
+}
+
+
+export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin:$HOME/.local/bin
 export QINGCLOUD_KEY=$HOME/.ssh/qingcloud/qing-cloud-zoom1-key
 export QNAK=$(cat $HOME/.ssh/qiniu/ak.txt)
 export QNSK=$(cat $HOME/.ssh/qiniu/sk.txt)
@@ -220,6 +253,25 @@ source $HOME/github/kube-ps1/kube-ps1.sh
 PROMPT='$(kube_ps1)'$PROMPT
 export NVIM_LISTEN_ADDRESS=/tmp/nvim
 
-eval "$(jira --completion-script-zsh)"
+# eval "$(jira --completion-script-zsh)"
 
 source /Users/wliang/.gvm/scripts/gvm
+export GOPATH="$HOME/go"; export GOROOT="$HOME/.go"; PATH="$GOPATH/bin:$PATH"; # g-install: do NOT edit, see https://github.com/stefanmaric/g
+
+# Wasmer
+export WASMER_DIR="/Users/wliang/.wasmer"
+[ -s "$WASMER_DIR/wasmer.sh" ] && source "$WASMER_DIR/wasmer.sh"
+source "/usr/local/opt/kube-ps1/share/kube-ps1.sh"
+PROMPT='$(kube_ps1)'$PROMPT
+KUBE_PS1_PREFIX=""
+KUBE_PS1_SYMBOL_DEFAULT=""
+KUBE_PS1_DIVIDER="-"
+KUBE_PS1_SUFFIX=" "
+function change_config() { name=$(ls ~/.kube/conf | fzf); export KUBECONFIG=~/.kube/conf/${name} }
+
+# use rigpreg with fzf for better performance
+export FZF_DEFAULT_COMMAND='rg --files --hidden'
+
+
+# Created by `userpath` on 2020-04-22 09:54:04
+export PATH="$PATH:/Users/wliang/.local/bin"

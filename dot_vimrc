@@ -47,6 +47,7 @@ set matchtime=0    " no annoying jumping for show match
 set relativenumber
 
 set rtp^=~/.vim
+set rtp+=/usr/local/opt/fzf
 filetype plugin on
 
 syntax on           " syntax highlighing
@@ -107,7 +108,7 @@ set cmdheight=2
 nnoremap <F2> :w<CR>
 nnoremap <F3> :grep -w <C-R><C-W>
 nnoremap <F4> :Unite buffer<CR>
-nnoremap <F5> :CtrlP<CR>
+nnoremap <F5> :Files<CR>
 nnoremap <F6> :set invlist<CR>
 nnoremap <F8> :TagbarToggle<CR>
 if has('mac')

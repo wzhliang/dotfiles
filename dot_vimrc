@@ -27,7 +27,9 @@ set backspace=indent,eol,start
 "set viminfo='20,<50,s10,h
 
 set autoindent     " always set autoindenting on
-set diffopt+=vertical
+if has('gui')
+	set diffopt+=vertical
+endif
 set nobomb
 set foldmethod=indent
 set foldlevel=999
@@ -152,7 +154,13 @@ endfun
 command! -nargs=1 -complete=customlist,MyFavourite E :e <args>
 
 fun! MyFavourite(A,L,P)
-	return split("/Users/wliang/Dropbox/wise/deps.txt /Users/wliang/Dropbox/wise/feat.md")
+	let lst = [
+                    \ "/Users/wliang/Dropbox/wise/deps.txt",
+                    \ "/Users/wliang/.vimrc",
+                    \ "/Users/wliang/.zshrc",
+                    \ "/Users/wliang/Dropbox/wise/feat.md"
+                    \ ]
+	return lst
 endfun
 
 set grepprg=ag\ --vimgrep\ $*
@@ -196,7 +204,7 @@ if has('mac')
     nmap <D-left> :tabprevious<CR>
     nmap <D-right> :tabnext<CR>
 endif
-color deus
+color Mustang
 
 let g:python3_host_prog="/usr/local/bin/python3"
 

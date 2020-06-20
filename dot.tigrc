@@ -1,2 +1,3 @@
 bind status - ?git checkout %(file)
 bind status ^ ?rm %(file)
+bind main R ?git revert %(commit)

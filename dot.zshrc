@@ -84,8 +84,6 @@ alias gr='gvim --remote'
 alias vr='vimr $(fzf)'
 alias or='open $(fzf)'
 alias goto='cd $(dirname `fzf`)'
-alias cr='code -r'
-alias rf='rox-filer'
 alias D="cd $HOME/Downloads"
 alias W="cd $HOME/Dropbox/wiki"
 alias w="cd $HOME/wise2c"
@@ -104,12 +102,10 @@ alias kcg='kubectl get'
 alias kgp='kubectl get pod'
 alias kgs='kubectl get svc'
 alias kgd='kubectl get deploy'
-alias cnpm="npm --registry=https://registry.npm.taobao.org \
-	--cache=$HOME/.npm/.cache/cnpm \
-	--disturl=https://npm.taobao.org/dist \
-	--userconfig=$HOME/.cnpmrc"
-alias sen='docker run -v /var/run/docker.sock:/run/docker.sock -ti -e TERM tomastomecek/sen'
 alias cat=bat
+alias http=curlie
+alias glr='git pull --rebase'
+
 function ipa {
 	ifconfig  en0 | grep 'inet ' | awk '{print $2}'
 }

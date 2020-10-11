@@ -26,7 +26,18 @@ Plug 'itchyny/landscape.vim'
 Plug 'itchyny/lightline.vim'
 Plug 'fatih/vim-go'
 Plug 'majutsushi/tagbar'
-Plug 'machakann/vim-sandwich'
+"Plug 'machakann/vim-sandwich'
+Plug 'sonph/onehalf'
+Plug 'ParamagicDev/vim-medic_chalk'
+Plug 'atahabaki/archman-vim'
+Plug 'Gavinok/SpaceWay.vim'
+Plug 'kaicataldo/material.vim'
+Plug 'yianwillis/vimcdoc'
+Plug 'zivyangll/git-blame.vim'
+
+
+"Plug 'zchee/nvim-go', { 'do': 'make'}
+
 
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()

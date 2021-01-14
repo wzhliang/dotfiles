@@ -1,12 +1,7 @@
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
 
-# Set name of the theme to load.
-# Look in ~/.oh-my-zsh/themes/
-# Optionally, if you set this to "random", it'll load a random theme each
-# time that oh-my-zsh is loaded.
 ZSH_THEME="amuse"
-#ZSH_THEME="steeef"
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -53,33 +48,14 @@ source $ZSH/oh-my-zsh.sh
 # User configuration
 
 export PATH="$HOME/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-# export MANPATH="/usr/local/man:$MANPATH"
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
 
-# Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
-#
 export EDITOR=nano
 
-# Compilation flags
-# export ARCHFLAGS="-arch x86_64"
 
-# ssh
-# export SSH_KEY_PATH="~/.ssh/dsa_id"
-
-# Set personal aliases, overriding those provided by oh-my-zsh libs,
-# plugins, and themes. Aliases can be placed here, though oh-my-zsh
-# users are encouraged to define aliases within the ZSH_CUSTOM folder.
-# For a full list of active aliases, run `alias`.
-#
-# Example aliases
-alias lt='ls -lt | head'
+# Set personal aliases
 alias gr='gvim --remote'
 alias vr='vimr $(fzf)'
 alias or='open $(fzf)'
@@ -87,14 +63,14 @@ alias goto='cd $(dirname `fzf`)'
 alias D="cd $HOME/Downloads"
 alias W="cd $HOME/Dropbox/wiki"
 alias w="cd $HOME/wise2c"
-alias hf="cd $HOME/wise2c/hfbank"
 alias V="[ -d ./venv ] && . ./venv/bin/activate"
 alias Z=". $HOME/.zshrc"
 alias ts='tig status'
 alias h='history'
 alias vi='nvim'
 alias kc='kubectl'
-alias kcc='kubectl create'
+alias kcc='k9s -n wisecloud-controller'
+alias kca='k9s -n wisecloud-agent'
 alias kcd='kubectl delete'
 alias kcds='kubectl describe'
 alias kca='kubectl apply'
@@ -102,9 +78,13 @@ alias kcg='kubectl get'
 alias kgp='kubectl get pod'
 alias kgs='kubectl get svc'
 alias kgd='kubectl get deploy'
+alias kge='kubectl get events'
 alias cat=bat
 alias http=curlie
 alias glr='git pull --rebase'
+alias ls=exa
+alias lt='\ls -lt | head'
+alias wget=aria2c
 
 function ipa {
 	ifconfig  en0 | grep 'inet ' | awk '{print $2}'
@@ -132,37 +112,11 @@ function unfan
 	unset all_proxy
 	export PS1=$__FAN_PROMPT
 	unset __FAN_PROMPT
-	# git config --global --unset http.proxy
 }
 
 function path {
     echo $PATH | sed -e 's,:,\
 ,g'
-}
-
-function mshare
-{
-    sudo mount -t cifs //nas/share2 -o username=$1,password=$2,uid=1000,gid=100,rw /mnt/share/
-}
-
-function mpers
-{
-    sudo mount -t cifs //nas/personal -o username=$1,password=$2,uid=1000,gid=100,rw /mnt/personal
-}
-
-function nasmount
-{
-    if [ ! -d $HOME/nas ]; then
-	echo "Missing $$HOME/nas"
-	exit
-    fi
-    cd
-    sshfs wliang@192.168.1.2:/mnt nas
-}
-
-function andsync
-{
-    rsync -rlvc --delete -e 'ssh -p 2222' $HOME/sync/ admin@192.168.1.6://mnt/sdcard/Download/osxsync
 }
 
 function wisegit
@@ -182,7 +136,7 @@ function ktx
 function update_ctx
 {
 	cd ~/wseyun/wise2c-kubectl
-	git pull && rm -rf ~/.kube/configs/* && cp conf/* ~/.kube/configs/
+	git pull && rm -rf ~/.kube/configs/* && cp conf/* ~/.kube/configs/ && chmod 600 ~/.kube/configs/*
 }
 
 function K
@@ -193,8 +147,7 @@ function K
 
 function J
 {
-    open https://jira.wise2c.com/browse/CLOUD-$1
-    # jira browse CLOUD-$1
+    open https://jira.wise2c.com/browse/YUN-$1
 }
 
 function backup-ymy
@@ -212,35 +165,30 @@ function jtd
 	jira list -q "resolution = Unresolved AND assignee = $1 AND project = 10206"
 }
 
+function S
+{
+	vimr $(rg -l $1 | fzf)
+}
+
+function qie 
+{
+	 pira switch $(pira show prs | grep '^[1-9]' | fzf | sed -E 's/^([0-9]+)(.*)$/\1/' )
+}
+
 
 export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin:$HOME/.local/bin
-export QINGCLOUD_KEY=$HOME/.ssh/qingcloud/qing-cloud-zoom1-key
-export QNAK=$(cat $HOME/.ssh/qiniu/ak.txt)
-export QNSK=$(cat $HOME/.ssh/qiniu/sk.txt)
-export QNDOMAIN="oyzp17qa8.bkt.clouddn.com"
-export XING_TRACE_ON=1
-
-# . /etc/zsh_command_not_found
+#export QINGCLOUD_KEY=$HOME/.ssh/qingcloud/qing-cloud-zoom1-key
+export IMGPREFIX=registry.cn-hangzhou.aliyuncs.com/wisecloud-image
+export QINGCLOUD_CACHE=qdeploy.wise2c.com:1086
 
 ulimit -c unlimited
 
 ### gopath
 export GOPATH=$HOME/go
-# using official Go distribution intead of brew installation
-# export GOROOT=/usr/local/go
 
 . /usr/local/etc/autojump.sh
 
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f /Users/wliang/Downloads/google-cloud-sdk/path.zsh.inc ]; then
-  source '/Users/wliang/Downloads/google-cloud-sdk/path.zsh.inc'
-fi
 
-# The next line enables shell command completion for gcloud.
-if [ -f /Users/wliang/Downloads/google-cloud-sdk/completion.zsh.inc ]; then
-  source '/Users/wliang/Downloads/google-cloud-sdk/completion.zsh.inc'
-fi
-eval $(thefuck --alias)
 export NC='wisecloud-controller'
 export NA='wisecloud-agent'
 
@@ -249,10 +197,8 @@ source $HOME/github/kube-ps1/kube-ps1.sh
 PROMPT='$(kube_ps1)'$PROMPT
 export NVIM_LISTEN_ADDRESS=/tmp/nvim
 
-# eval "$(jira --completion-script-zsh)"
-
 source /Users/wliang/.gvm/scripts/gvm
-export GOPATH="$HOME/go"; export GOROOT="$HOME/.go"; PATH="$GOPATH/bin:$PATH"; # g-install: do NOT edit, see https://github.com/stefanmaric/g
+export GOPATH="$HOME/go"; export GOROOT="$HOME/.go"; PATH="$GOPATH/bin:$PATH";
 
 # Wasmer
 export WASMER_DIR="/Users/wliang/.wasmer"
@@ -268,6 +214,7 @@ function change_config() { name=$(ls ~/.kube/conf | fzf); export KUBECONFIG=~/.k
 # use rigpreg with fzf for better performance
 export FZF_DEFAULT_COMMAND='rg --files --hidden'
 
+export PATH="/Users/wliang/.linkerd2/bin":"/Users/wliang/.cargo/bin":$PATH
 
-# Created by `userpath` on 2020-04-22 09:54:04
-export PATH="$PATH:/Users/wliang/.local/bin"
+export GO111MODULE=on 
+export HELM_EXPERIMENTAL_OCI=1

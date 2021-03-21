@@ -71,9 +71,9 @@ alias vi='nvim'
 alias kc='kubectl'
 alias kcc='k9s -n wisecloud-controller'
 alias kca='k9s -n wisecloud-agent'
+alias Helm='k9s -c helm --all-namespaces'
 alias kcd='kubectl delete'
 alias kcds='kubectl describe'
-alias kca='kubectl apply'
 alias kcg='kubectl get'
 alias kgp='kubectl get pod'
 alias kgs='kubectl get svc'
@@ -160,6 +160,11 @@ function backup-wise2c
     rsync -av --delete $HOME/wise2c /Volumes/Extreme\ SSD/Backup
 }
 
+function sync-wiki
+{
+    rsync -av --delete $HOME/Dropbox/wiki $HOME/Nustore\ Files/Nut/wiki
+}
+
 function jtd
 {
 	jira list -q "resolution = Unresolved AND assignee = $1 AND project = 10206"
@@ -214,7 +219,7 @@ function change_config() { name=$(ls ~/.kube/conf | fzf); export KUBECONFIG=~/.k
 # use rigpreg with fzf for better performance
 export FZF_DEFAULT_COMMAND='rg --files --hidden'
 
-export PATH="/Users/wliang/.linkerd2/bin":"/Users/wliang/.cargo/bin":$PATH
+export PATH="${KREW_ROOT:-$HOME/.krew}/bin":"/Users/wliang/.linkerd2/bin":"/Users/wliang/.cargo/bin":$PATH
 
 export GO111MODULE=on 
 export HELM_EXPERIMENTAL_OCI=1

@@ -1,0 +1,2 @@
+dot_muttrc filter=git-crypt diff=git-crypt
+

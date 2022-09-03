@@ -73,4 +73,4 @@ exe 'luafile '.  stdpath('config') . '/cmp.lua'
 " Telescope Using Lua functions
 nnoremap <F5>       <cmd>lua require('telescope.builtin').find_files()<cr>
 nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep()<cr>
-n
+nnoremap <F4>       <cmd>lua require('telescope.builtin').buffers()<cr>

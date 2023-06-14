@@ -1,3 +1,5 @@
 bind status - ?git checkout %(file)
 bind status ^ ?rm %(file)
 bind main R ?git revert %(commit)
+set split-view-width = 80%
+set main-view-id = yes
